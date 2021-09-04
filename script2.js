@@ -4,6 +4,14 @@ pc['/'] = new Object()
 var pwd = pc['/']
 var pwdPath = ['/']
 
+document.getElementById('terminal-textbox').addEventListener('keypress',(e)=>{
+    if(e.key === 'Enter'){
+        execute()
+    } 
+})
+
+//-------------------
+
 
 function addFolder(location,folderName){
     location[folderName] = new Object();
@@ -25,7 +33,8 @@ function ls(){
 
     console.log(string);
     let a = document.createElement('p')
-    a.innerText = string
+    a.innerText = 'root@mySite ' + string
+    a.classList.add('text-color')
     document.body.appendChild(a)
 }
 
@@ -44,7 +53,7 @@ function cd(arg){
 }
 
 function execute(){
-    let cmd = document.getElementById('cmd').value
+    let cmd = document.getElementById('terminal-textbox').value
 
     if(cmd === 'ls'){
         ls()
@@ -53,7 +62,7 @@ function execute(){
         cd(cmd)
     }
 
-    document.getElementById('cmd').value = ''
+    document.getElementById('terminal-textbox').value = ''
 }
 
 function goBack(){
