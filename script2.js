@@ -8,12 +8,16 @@ function addFolder(location,folderName){
     location[folderName] = new Object();
 }
 
+function removeFolder(location,folderName){
+    delete location[folderName]
+}
+
 addFolder(pc['/'],'users/')
 addFolder(pc['/'],'bin/')
 addFolder(pc['/'],'root/')
 
-addFolder(pc['/']['users/'],'Nikola')
-addFolder(pc['/']['users/'],'Ubuntu')
+addFolder(pc['/']['users/'],'Nikola/')
+addFolder(pc['/']['users/'],'Ubuntu/')
 
 document.addEventListener('click',e=>{
     document.getElementById('terminal-textbox').focus()
@@ -37,6 +41,10 @@ document.getElementById('location').innerText = getPwdPath()
 // ---------------------------------------------------------------------------
 
 /**Functions */
+function scrollToBottom(){
+    window.scrollTo(0,document.body.scrollHeight);
+}
+
 function ls(){
     var string = '';
     Object.keys(pwd).forEach(key=>{
@@ -80,6 +88,10 @@ function execute(){
     } else if(cmd ==='help'){
         outputText('Hello. Welcome to my terminal. If you wanna be friends, I\'m totally down!')
         outputText('There is no real reason why I made this, seemed kinda cool.')
+    } else if(cmd.includes('mkdir ')){
+        addFolder(pwd,`${cmd.substring(6)}/`)
+    } else if(cmd.includes('rmdir ')){
+        removeFolder(pwd,cmd.substring(6))
     }
 
     document.getElementById('terminal-textbox').value = ''
@@ -109,13 +121,11 @@ function clearTerminal(){
 }
 
 function getPwdPath(){
-    let ans = pwdPath.join().replace(',','') //only removes the first zarez
-    console.log('e');
-    return 'C:'+ans
+    return 'C:'+pwdPath.join('')
 }
 
 function outputText(text,color){
-    let a = document.createElement('p')
+    let a = document.createElement('div')
     a.innerText = text
     if(color === true){
         a.classList.add('location-color')
@@ -124,8 +134,4 @@ function outputText(text,color){
     }
     a.classList.add('output')
     document.getElementById('output-container').append(a)
-}
-
-function scrollToBottom(){
-    window.scrollTo(0,document.body.scrollHeight);
 }
