@@ -13,12 +13,19 @@
 }
 
 .text-color {
-    color:greenyellow;
+    color:rgb(117, 124, 107);
     padding: 2px 5px;
+}
+
+.user-color {
+    color:greenyellow;
 }
 
 #textbox-group {
     display:flex;
+    /* position: absolute;
+    bottom:0;
+    left:0; */
 }
 
 body {
