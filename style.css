@@ -1,0 +1,38 @@
+#terminal-textbox {
+    width:100%;
+    color:greenyellow;
+    background-color: rgb(39, 37, 37);
+    border:none;
+    margin:5px 0;
+    padding:5px 0;
+}
+
+#terminal-textbox:focus {
+    border:none;
+    outline:none;
+}
+
+.text-color {
+    color:rgb(117, 124, 107);
+    /* padding: 2px 5px; */
+}
+
+.location-color {
+    color:greenyellow;
+}
+
+.user-color {
+    color:greenyellow;
+}
+
+/* #textbox-group {
+    display:flex;
+    position: absolute;
+    bottom:0;
+    left:0;
+} */
+
+body {
+    background-color: rgb(39, 37, 37);
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
