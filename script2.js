@@ -48,7 +48,7 @@ function ls(){
     outputText(string)
 }
 
-function cd(arg){
+function cd(arg){ //bug when I am in the Nikola folder.
     if(arg === '..' && pwdPath.length > 1){ //quick easy fix, but tbh I would just remove the ['/'] from the entire thing. If array is empty, we are there
         return goBack()
     }
@@ -65,8 +65,9 @@ function cd(arg){
 function execute(){
     let cmd = document.getElementById('terminal-textbox').value
 
+    outputText(getPwdPath(),true)
     outputText(cmd)
-    
+
     if(cmd === 'ls'){
         ls()
     } else if(cmd.includes('cd ')){
@@ -76,6 +77,9 @@ function execute(){
         clearTerminal()
     } else if(cmd === 'pwd'){
         outputText(getPwdPath())
+    } else if(cmd ==='help'){
+        outputText('Hello. Welcome to my terminal. If you wanna be friends, I\'m totally down!')
+        outputText('There is no real reason why I made this, seemed kinda cool.')
     }
 
     document.getElementById('terminal-textbox').value = ''
@@ -90,7 +94,7 @@ function goBack(){
         console.log(e);
         pwd = pwd[e]
     })
-    outputText(getPwdPath())
+
     document.getElementById('location').innerText = getPwdPath()
 }
 
@@ -105,15 +109,19 @@ function clearTerminal(){
 }
 
 function getPwdPath(){
-    let ans = pwdPath.join().replace(',','')
+    let ans = pwdPath.join().replace(',','') //only removes the first zarez
     console.log('e');
     return 'C:'+ans
 }
 
-function outputText(text){
+function outputText(text,color){
     let a = document.createElement('p')
     a.innerText = text
-    a.classList.add('text-color')
+    if(color === true){
+        a.classList.add('location-color')
+    } else {
+        a.classList.add('text-color')
+    }
     a.classList.add('output')
     document.getElementById('output-container').append(a)
 }
