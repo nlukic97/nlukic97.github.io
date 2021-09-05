@@ -91,9 +91,16 @@ document.getElementById('terminal-textbox').addEventListener('keydown',(e)=>{
         showLastCommand()
     }
     
-    if(e.key == 'Tab' && document.getElementById('terminal-textbox').value.includes('cd ')){
+    if(e.key == 'Tab'){
         e.preventDefault()
-        autofill(document.getElementById('terminal-textbox').value.substring(3))
+        let val = document.getElementById('terminal-textbox').value
+        if(val.includes('cd ')){
+            autofill(val,val.substring(3),true)
+        } else if(val.includes('rm ')){
+            autofill(val, val.substring(3),false)
+        } else if(val.includes('rmdir ')){
+            autofill(val, val.substring(6),true)
+        }
     }
 })
 
@@ -110,16 +117,9 @@ function scrollToBottom(){
 function ls(){
     var string = '';
     Object.keys(pwd).forEach(key=>{
-        string = string + key + ' '
-    });
-    
-    outputText(string)
-}
-
-function showFolderList(){
-    var string = '';
-    Object.keys(pwd).forEach(key=>{
         if(typeof(pwd[key])==='object'){
+            string = string + key + '/ '
+        } else {
             string = string + key + ' '
         }
     });
@@ -127,7 +127,35 @@ function showFolderList(){
     outputText(string)
 }
 
+function showFolderList(){
+    getNecessaryList('object')
+}
+
+function showFileList(){
+    getNecessaryList('string')
+}
+
+
+/**Utility function for showing folders and files */
+function getNecessaryList(fileType){
+    var string = '';
+
+    Object.keys(pwd).forEach(key=>{
+        if(typeof(pwd[key]) === fileType){
+            
+            if(fileType === 'object'){
+                string = string + key + '/ '
+            } else if(fileType === 'string'){
+                string = string + key + ' '
+            }
+        }
+    });
+    
+    outputText(string)
+}
+
 function cd(arg){ //bug when I am in the Nikola folder.
+    arg = arg.replace('/','')
     if(arg === '..' && pwdPath.length > 1){ //quick easy fix, but tbh I would just remove the ['/'] from the entire thing. If array is empty, we are there
         return goBack()
     }
@@ -136,7 +164,9 @@ function cd(arg){ //bug when I am in the Nikola folder.
     let ans = keys.includes(arg)
     
     if(ans === false){
-        outputText('Error: The directory could not be found.')
+        if(arg !== '..'){
+            outputText('Error: The directory could not be found.')
+        }
         return
     }
     
@@ -169,8 +199,9 @@ function execute(){
     } else if(cmd === 'pwd'){
         outputText(getPwdPath())
     } else if(cmd ==='about'){
-        outputText('Hello. Welcome to my terminal. If you wanna be friends, I\'m totally down!')
-        outputText('There is no real reason why I made this, seemed kinda cool.')
+        outputText('Hello. My name is Nikola, and this is my terminal simulation. It is heavily inspired by the terminal emulator \'cmder\'.')
+        outputText('There is no real reason why I made this, just seemed like something cool to try.')
+        outputText('Type in <span class=\'info-color\'>help</span> to see a list of available commands.')
     } else if(cmd.includes('mkdir ')){
         addFolder(pwd,`${cmd.substring(6)}`)
     } else if(cmd.includes('rmdir ') ){
@@ -188,8 +219,56 @@ function execute(){
         cat(cmd.substring(4))
     } else if(cmd === 'exit'){
         window.close()
-    } else if(cmd ==='help' || cmd === '-h'){
+    } else if(cmd ==='info'){
         window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley", "_blank");
+
+        setTimeout(function(){
+            outputText(getPwdPath(),true)
+            outputText('&lambda; lol.')
+            outputText('&lambda; You should type in <span class=\'info-color\'>about</span> instead.')
+        },2000)
+    } else if(cmd === 'help'){
+        outputText(`
+       <div>&lambda;</div> 
+
+       <div>help - <em>shows all the commands<</em>/div> 
+
+       <div>info - <em>you already know...</em></div>
+
+       <div>about - <em>Just some info on this little project of mine. :) </em></div>
+        
+       <div>echo [text] - <em>Prints text to the terminal<</em>/div> 
+
+       <div>ls - <em>Prints files and folders in the current working diretory.</em></div>
+
+       <div>pwd - <em>Prints the current path you are in.</em></div>
+
+       <div>clear - <em>clears the terminal screen</em></div>
+
+       <div>arrow up - <em>shows previously executed commands</em></div>
+
+       <div>cd [folder] - <em>enters a directory</em></div>
+
+       <div>cd - <em>lists all the folders in the current working directory</em></div>
+
+       <div>mkdir [dirname] - <em>creates a directory</em></div>
+
+       <div>rmdir [dirname] - <em>removes a directory</em></div>
+
+       <div>touch [filename] - <em>create a file (text)</em></div>
+
+       <div>rm [filename] - <em>remove a file</em></div>
+
+       <div>cat [filename] - <em>read the contents of a file</em></div>
+
+       <div>echo [string] > [filename] - <em>writes a string to a file. it will create a file if it does not exist, and overwrite existing ones.</em></div>
+
+       <div>exit - <em>it will close the terminal (browser) window</em></div>
+        `)
+    }
+    
+    else {
+        outputText('Unrecognized command.')
     }
     
     document.getElementById('terminal-textbox').value = ''
@@ -242,6 +321,7 @@ function outputText(text,color,cmd){
 }
 
 function saveTextToFile(cmd){
+    
     let a = cmd.trim().split(' ')
     if(a[a.length-2] != '>'){
         return outputText('Error')
@@ -249,6 +329,13 @@ function saveTextToFile(cmd){
     var string = ''
     
     let file = a[a.length - 1]
+
+    //checking if file already exists
+    if(typeof(pwd[file]) === 'object'){
+        outputText('Error: A folder with this name already exists.')
+        return
+    }
+
     a.forEach((item,index)=>{
         if(index != 0 && index < a.length - 2){
             string += ' ' + item
@@ -267,29 +354,80 @@ function cat(file){
     }
 }
 
-function autofill(string){
+function autofill(enteredCmd,string,folderCommand){
     let newString = string.split(' ')
     
     if(newString.length === 1){
         if(string !== '' && string[0] !== ' ' && string[string.length-1] !== ''){
             let keys = Object.keys(pwd)
-            
+            let criteria = (folderCommand === true) ? 'object' : 'string';
+
             for(let i = 0; i < keys.length; i++){
                 let ans = keys[i].match('^' + string)
                 console.log(ans);
+
                 if(ans != null){
-                    if(typeof(pwd[keys[i]]) === 'string'){
+                    if(typeof(pwd[keys[i]]) !== criteria){
                         return
                     }
-                    document.getElementById('terminal-textbox').value = 'cd ' + keys[i]
+                    let autocomplete = enteredCmd.split(' ')[0] + ' ' + keys[i]
+
+                    if(criteria === 'object'){
+                        autocomplete += '/'
+                    }
+                    document.getElementById('terminal-textbox').value = autocomplete
+
                     break 
                 }
             }
         } else {
             outputText(getPwdPath(),true)
-            outputText('cd',false,true)
-            showFolderList()
+            outputText(enteredCmd,false,true)
+
+            if(folderCommand === true){
+                showFolderList()
+            } else {
+                showFileList()
+            }
         }
     }
-    
+
 }
+
+function startSequence(){
+    setTimeout(function(){
+        outputText(getPwdPath(),true)
+        outputText('&lambda; Hello Neo.')
+    },2000)
+    
+    setTimeout(function(){
+        outputText(getPwdPath(),true)
+        outputText('&lambda; We have been expecting you.')
+    },3700)
+    
+    setTimeout(function(){
+        outputText(getPwdPath(),true)
+        outputText('<span class=\'text-color\'>&lambda;</span> Type <span class="info-color">info</span> to learn more about this project.')
+        document.getElementById('d-none').removeAttribute('id','d-none')
+        document.getElementById('terminal-textbox').focus()
+    },6000)
+}
+
+function checkForCookie(cookieName){
+    let cookies = document.cookie.split('; ')
+
+    for(let i =0; i < cookies.length; i++){
+        if(cookies[i].includes(cookieName)){
+            let result = cookies[i].replace(cookieName+'=','')
+            return (result == 'true')? true : false;
+            break
+        }
+    }
+}
+
+    if(checkForCookie('matrixShown') === true){
+        document.getElementById('d-none').removeAttribute('id','d-none')
+    } else {
+        startSequence()
+        document.cookie = 'matrixShown=true'
+    }
