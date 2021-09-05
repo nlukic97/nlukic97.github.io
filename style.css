@@ -1,10 +1,8 @@
 #terminal-textbox {
-    width:100%;
-    color:greenyellow;
+    width:99%;
     background-color: rgb(39, 37, 37);
     border:none;
-    margin:5px 0;
-    padding:5px 0;
+    padding:0;
 }
 
 #terminal-textbox:focus {
