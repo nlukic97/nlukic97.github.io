@@ -431,3 +431,6 @@ function checkForCookie(cookieName){
         startSequence()
         document.cookie = 'matrixShown=true'
     }
+
+
+    //github pages
