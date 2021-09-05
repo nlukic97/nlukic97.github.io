@@ -205,7 +205,7 @@ function execute(){
     } else if(cmd.includes('mkdir ')){
         addFolder(pwd,`${cmd.substring(6)}`)
     } else if(cmd.includes('rmdir ') ){
-        removeFolder(pwd,cmd.substring(6)) //Does not work for some reason
+        removeFolder(pwd,cmd.substring(6).replace('/',''))
     } else if(cmd.includes('rm ') ){
         removeFile(pwd,cmd.substring(3))
     } else if(cmd.includes('echo ') && cmd.includes(' > ')){
@@ -263,8 +263,8 @@ function execute(){
 
        <div>echo [string] > [filename] - <em>writes a string to a file. it will create a file if it does not exist, and overwrite existing ones.</em></div>
 
-       <div>exit - <em>it will close the terminal (browser) window</em></div>
-        `)
+       `)
+    //    <div>exit - <em>it will close the terminal (browser) window</em></div> //does not work
     }
     
     else {
