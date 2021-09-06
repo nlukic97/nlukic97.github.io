@@ -27,3 +27,4 @@ directories,and maybe reading text files
 - Previous commands are also supported - simply press the arrow up to see what your previous commands were.
 
 ## there are more commands to be added, I will add them later
+## testing 2
