@@ -6,6 +6,7 @@ var pwdPath = ['/']
 
 var cmdHistory = []
 var cmdIndex = 0;
+var lastArrowWasUp = null;
 
 function addFolder(location,folderName){
     if(folder_file_exists(location[folderName])){
@@ -50,7 +51,17 @@ function folder_file_exists(folder){
 }
 
 function showLastCommand(){
+    console.log(cmdHistory, cmdIndex);
     if(cmdHistory.length > 0){
+
+        if(lastArrowWasUp === false){
+            cmdIndex += 1
+        }
+
+        if(cmdIndex < 0 || cmdIndex > cmdHistory.length - 1){
+            cmdIndex = 0
+        }
+        
         document.getElementById('terminal-textbox').value = cmdHistory[cmdIndex]
         
         cmdIndex++;
@@ -58,6 +69,25 @@ function showLastCommand(){
             cmdIndex = 0
         }
     }   
+    lastArrowWasUp = true
+}
+
+function showPreviousCommand(){
+    console.log(cmdHistory, cmdIndex);
+
+    if(cmdHistory.length > 0){
+        if(lastArrowWasUp === true){
+            cmdIndex -= 2
+        } else {
+            cmdIndex -= 1;
+        }
+        
+        if(cmdIndex < 0){
+            cmdIndex = cmdHistory.length - 1
+        }
+        document.getElementById('terminal-textbox').value = cmdHistory[cmdIndex]
+    }   
+    lastArrowWasUp = false
 }
 
 addFolder(pc['/'],'users')
@@ -73,9 +103,9 @@ document.addEventListener('click',e=>{
     document.getElementById('terminal-textbox').focus()
 })
 
-document.addEventListener('keydown',e=>{
+// document.addEventListener('keydown',e=>{
     // document.getElementById('terminal-textbox').focus()
-})
+// })
 
 document.getElementById('terminal-textbox').focus()
 
@@ -89,6 +119,10 @@ document.getElementById('terminal-textbox').addEventListener('keypress',(e)=>{
 document.getElementById('terminal-textbox').addEventListener('keydown',(e)=>{
     if(e.key==='ArrowUp'){
         showLastCommand()
+    }
+
+    if(e.key==='ArrowDown'){
+        showPreviousCommand()
     }
     
     if(e.key == 'Tab'){
