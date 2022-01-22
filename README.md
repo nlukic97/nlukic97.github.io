@@ -4,25 +4,36 @@ directories,and maybe reading text files
 
 ---
 ## Commands that can work:
-        ls
-        
-        mkdir [foldername]
+        help
 
-        rmdir [folder/file name]
+        info
 
-        rm [folder/file name]
-
-
-        touch [filename]
-
-        cat [any-text goes here] > [name_of_file]
-        
-
-        clear
+        about
 
         echo
 
-        help
+        ls
 
-- Previous commands are also supported - simply press the arrow up to see what your previous commands were.
+        pwd
+
+        clear
+
+        arrow up / arrow down
+
+        cd [folder]
+
+        cd 
+
+        mkdir [dirname] 
+
+        rmdir [dirname] 
+
+        touch [filename]
+
+        rm [filename] 
+
+        cat [filename] 
+
+        echo [string] > [filename] 
+
 

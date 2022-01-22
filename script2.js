@@ -233,8 +233,8 @@ function execute(){
     } else if(cmd === 'pwd'){
         outputText(getPwdPath())
     } else if(cmd ==='about'){
-        outputText('Hello. My name is Nikola, and this is my terminal simulation. It is heavily inspired by the terminal emulator \'cmder\'.')
-        outputText('There is no real reason why I made this, just seemed like something cool to try.')
+        outputText('Hello. My name is Nikola, and this is my console/ terminal simulation. It\'s heavily inspired by the terminal emulator \'cmder\'.')
+        outputText('There\'s no real reason why I made this- just seemed like something cool to try.')
         outputText('Type in <span class=\'info-color\'>help</span> to see a list of available commands.')
     } else if(cmd.includes('mkdir ')){
         addFolder(pwd,`${cmd.substring(6)}`)
@@ -279,7 +279,7 @@ function execute(){
 
        <div>clear - <em>clears the terminal screen</em></div>
 
-       <div>arrow up - <em>shows previously executed commands</em></div>
+       <div>arrow up / arrow down - <em>shifting back and forth between previously executed commands</em></div>
 
        <div>cd [folder] - <em>enters a directory</em></div>
 
