@@ -10,6 +10,8 @@ directories,and maybe reading text files
 
         about
 
+        about dev
+
         echo
 
         ls
@@ -17,6 +19,8 @@ directories,and maybe reading text files
         pwd
 
         clear
+
+        CTRL + L
 
         arrow up / arrow down
 
@@ -34,6 +38,4 @@ directories,and maybe reading text files
 
         cat [filename] 
 
-        echo [string] > [filename] 
-
-
+        echo [string] > [filename]

@@ -7,6 +7,9 @@ var pwdPath = ['/']
 var cmdHistory = []
 var cmdIndex = 0;
 var lastArrowWasUp = null;
+var bioImage = './images/githubBio.PNG'
+var githubAccUrl = 'https://github.com/nlukic97'
+var personalBio = `My name is Nikola. Willing to code for food. Check out my <a href='${githubAccUrl}' class="contact-link" target="_blank">Github Account</a>.`
 
 function addFolder(location,folderName){
     if(folder_file_exists(location[folderName])){
@@ -107,7 +110,10 @@ document.addEventListener('click',e=>{
     // document.getElementById('terminal-textbox').focus()
 // })
 
-document.getElementById('terminal-textbox').focus()
+// The terminal input will be in focus only after the entire page has loaded
+window.addEventListener('load',()=>{
+    document.getElementById('terminal-textbox').focus()
+})
 
 
 document.getElementById('terminal-textbox').addEventListener('keypress',(e)=>{
@@ -135,6 +141,12 @@ document.getElementById('terminal-textbox').addEventListener('keydown',(e)=>{
         } else if(val.includes('rmdir ')){
             autofill(val, val.substring(6),true)
         }
+    }
+
+    // Ctrl + L - clears the terminal
+    if(e.ctrlKey && e.code === 'KeyL'){
+        e.preventDefault()
+        clearTerminal()
     }
 })
 
@@ -225,34 +237,51 @@ function execute(){
     
     if(cmd === 'ls'){
         ls()
+
     } else if(cmd.includes('cd ')){
         cmd = cmd.substring(3)
         cd(cmd)
+
     } else if(cmd === 'clear'){
         clearTerminal()
+
     } else if(cmd === 'pwd'){
         outputText(getPwdPath())
+
     } else if(cmd ==='about'){
         outputText('Hello. My name is Nikola, and this is my console/ terminal simulation. It\'s heavily inspired by the terminal emulator \'cmder\'.')
         outputText('There\'s no real reason why I made this- just seemed like something cool to try.')
         outputText('Type in <span class=\'info-color\'>help</span> to see a list of available commands.')
+        outputText('Type in <span class=\'info-color\'>about dev</span> to learn more about me. :)')
+
+    } else if(cmd === 'about dev'){
+        outputText(`<img alt='github bio' src='${bioImage}'>`)
+        outputText(personalBio)
+
     } else if(cmd.includes('mkdir ')){
         addFolder(pwd,`${cmd.substring(6)}`)
+
     } else if(cmd.includes('rmdir ') ){
         removeFolder(pwd,cmd.substring(6).replace('/',''))
+
     } else if(cmd.includes('rm ') ){
         removeFile(pwd,cmd.substring(3))
+
     } else if(cmd.includes('echo ') && cmd.includes(' > ')){
         saveTextToFile(cmd)
         
     } else if(cmd.includes('touch ')){
         addFile(pwd,cmd.substring(6))
+
     } else if(cmd.includes('echo ')){
         outputText(cmd.substring(5))
+
     } else if(cmd.includes('cat ')){
         cat(cmd.substring(4))
+
     } else if(cmd === 'exit'){
         window.close()
+
     } else if(cmd ==='info'){
         window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley", "_blank");
 
@@ -261,6 +290,7 @@ function execute(){
             outputText('&lambda; lol.')
             outputText('&lambda; You should type in <span class=\'info-color\'>about</span> instead.')
         },2000)
+
     } else if(cmd === 'help'){
         outputText(`
        <div>&lambda;</div> 
@@ -270,7 +300,9 @@ function execute(){
        <div>info - <em>you already know...</em></div>
 
        <div>about - <em>Just some info on this little project of mine. :) </em></div>
-        
+
+       <div>about dev - <em>information about the developer</em></div>
+       
        <div>echo [text] - <em>Prints text to the terminal<</em>/div> 
 
        <div>ls - <em>Prints files and folders in the current working diretory.</em></div>
@@ -278,6 +310,8 @@ function execute(){
        <div>pwd - <em>Prints the current path you are in.</em></div>
 
        <div>clear - <em>clears the terminal screen</em></div>
+       
+       <div>Ctrl + L - <em>clears the terminal screen</em></div>
 
        <div>arrow up / arrow down - <em>shifting back and forth between previously executed commands</em></div>
 
@@ -296,7 +330,6 @@ function execute(){
        <div>cat [filename] - <em>read the contents of a file</em></div>
 
        <div>echo [string] > [filename] - <em>writes a string to a file. it will create a file if it does not exist, and overwrite existing ones.</em></div>
-
        `)
     //    <div>exit - <em>it will close the terminal (browser) window</em></div> //does not work
     }
